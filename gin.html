@@ -132,7 +132,7 @@
         </div>
 
         <!-- Mobile Menu Overlay -->
-        <div id="mobile-menu" class="fixed inset-0 bg-[var(--bg-dark-1)]/95 backdrop-blur-md z-40 transform translate-x-full transition-transform duration-300 flex flex-col items-center justify-center gap-8">
+        <div id="mobile-menu" class="fixed inset-0 bg-[var(--bg-dark-1)] z-40 transform translate-x-full transition-transform duration-300 flex flex-col items-center justify-center gap-8">
             <img src="Satiwa light logo.png" alt="Satiwa Logo" class="h-16 w-auto mb-8">
             <a href="/" class="mobile-link text-2xl serif text-[var(--brand-text)]">Home</a>
             <a href="story" class="mobile-link text-2xl serif text-[var(--brand-text)]">Our Story</a>
@@ -217,16 +217,16 @@
         mobileMenuBtn.addEventListener('click', () => {
             menuOpen = !menuOpen;
             if(menuOpen) {
-                mobileMenu.classList.remove('translate-x-full');
+                mobileMenu.classList.remove('translate-x-full'); document.body.style.overflow = 'hidden';
             } else {
-                mobileMenu.classList.add('translate-x-full');
+                mobileMenu.classList.add('translate-x-full'); document.body.style.overflow = '';
             }
         });
 
         mobileLinks.forEach(link => {
             link.addEventListener('click', () => {
                 menuOpen = false;
-                mobileMenu.classList.add('translate-x-full');
+                mobileMenu.classList.add('translate-x-full'); document.body.style.overflow = '';
             });
         });
 
@@ -269,5 +269,6 @@
     </script>
 </body>
 </html>
+
 
 
