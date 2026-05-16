@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Satiwa | Hemp Craft Spirits</title>
+    <link rel="icon" type="image/png" href="Satiwa light logo.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <style>
+        /* Satiwa Brand Guidelines 2026 */
+        :root {
+            --bg-dark-1: #ffffff;
+            --bg-dark-2: #f5f5f5;
+            --brand-gold: #0170B9;
+            --brand-gold-dark: #3a3a3a;
+            --brand-text: #4B4F58;
+            --brand-green: #1E4B1E;
+            --brand-sage: #C0C4AA;
+            --brand-rose: #0170B9;
+            
+            /* Label Accents */
+            --accent-yellow: #F4D03F;
+            --accent-red: #E74C3C;
+            --accent-blue: #3498DB;
+        }
+        body {
+            /* Using system fonts for body as per guidelines */
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: linear-gradient(to bottom, var(--bg-dark-1), var(--bg-dark-2));
+            color: var(--brand-text);
+            overflow-x: hidden;
+            background-attachment: fixed;
+        }
+        h1, h2, h3, h4, h5, .serif {
+            font-family: 'Playfair Display', serif;
+            letter-spacing: 0.05em;
+        }
+        
+        .section-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--brand-gold-dark);
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, var(--brand-gold), var(--brand-gold-dark));
+            color: var(--bg-dark-1);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            transition: all 0.3s ease;
+        }
+        .cta-button:hover {
+            box-shadow: 0 0 20px rgba(212, 168, 67, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .carousel-btn {
+            position: absolute; top: 50%; transform: translateY(-50%); z-index: 20;
+            width: 2rem; height: 2rem; border-radius: 9999px; background: rgba(0,0,0,0.5);
+            color: white; border: none; cursor: pointer; opacity: 0; transition: opacity 0.3s;
+            display: flex; align-items: center; justify-content: center; font-size: 1rem;
+        }
+        .carousel:hover .carousel-btn { opacity: 1; }
+        .carousel-btn.prev { left: 0.5rem; }
+        .carousel-btn.next { right: 0.5rem; }
+        
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .hide-scrollbar {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+    
+        /* Flowy Page Transitions */
+        body {
+            animation: flowyFadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        @keyframes flowyFadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        body.page-transition-out {
+            opacity: 0;
+            transform: translateY(-15px) !important;
+            transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        }
+    </style>
+</head>
+<body class="antialiased overflow-hidden">
+
+
+    <!-- Age Gate Modal -->
+    <div id="age-gate" class="fixed inset-0 z-[100] flex items-center justify-center transition-opacity duration-500">
+        <div class="bg-[var(--bg-dark-1)] p-10 md:p-14 rounded-xl max-w-md w-full mx-4 text-center border border-[var(--brand-sage)] shadow-2xl">
+            <h2 class="text-4xl md:text-5xl serif mb-1 text-[var(--brand-text)] tracking-widest">SATIWA</h2>
+            <p class="text-[var(--brand-gold-dark)] mb-8 uppercase tracking-[0.3em] text-xs">Hemp Craft Spirits</p>
+            <h3 class="text-lg mb-6 text-[var(--brand-text)] font-light">Are you of legal drinking age?</h3>
+            <div class="flex gap-4 justify-center mb-8">
+                <button onclick="enterSite()" class="cta-button px-8 py-3 rounded-2xl text-sm w-full">YES</button>
+                <button onclick="denySite()" class="px-8 py-3 bg-transparent border border-[var(--brand-sage)] text-[var(--brand-sage)] hover:text-[var(--brand-text)] hover:border-white transition-colors duration-300 rounded-2xl text-sm uppercase tracking-widest w-full">NO</button>
+            </div>
+            <p id="age-error" class="text-red-500 mb-4 text-sm hidden">You must be of legal drinking age to enter.</p>
+            <div class="border-t border-[var(--brand-sage)]/30 pt-6">
+                <p class="text-[10px] text-[var(--brand-sage)] uppercase tracking-widest leading-relaxed">
+                    DRINK RESPONSIBLY.<br>NOT FOR SALE TO PERSONS UNDER 18.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 transition-all duration-300 px-6 py-4" id="navbar">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <a href="/" class="z-50"><img src="Satiwa light logo.png" alt="Satiwa Logo" class="h-10 w-auto"></a>
+            
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex gap-8 items-center">
+                <a href="/" class="text-xs uppercase tracking-[0.15em] text-[var(--brand-text)] hover:text-[var(--brand-gold)] transition-colors">Home</a>
+                <a href="story" class="text-xs uppercase tracking-[0.15em] text-[var(--brand-text)] hover:text-[var(--brand-gold)] transition-colors">Our Story</a>
+                <a href="mixology" class="text-xs uppercase tracking-[0.15em] text-[var(--brand-text)] hover:text-[var(--brand-gold)] transition-colors">Mixology</a>
+                <a href="catalogue" class="text-xs uppercase tracking-[0.15em] text-[var(--brand-text)] hover:text-[var(--brand-gold)] transition-colors">Catalogue</a>
+                <a href="/#contact" class="text-xs uppercase tracking-[0.15em] text-[var(--brand-text)] hover:text-[var(--brand-gold)] transition-colors mr-4">Find Us</a>
+                <a href="catalogue" class="cta-button px-6 py-2.5 rounded-2xl text-xs">Get Happy High</a>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button class="md:hidden z-50 text-[var(--brand-text)] focus:outline-none" id="mobile-menu-btn">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Mobile Menu Overlay -->
+        <div id="mobile-menu" class="fixed inset-0 bg-[var(--bg-dark-1)]/95 backdrop-blur-md z-40 transform translate-x-full transition-transform duration-300 flex flex-col items-center justify-center gap-8">
+            <img src="Satiwa light logo.png" alt="Satiwa Logo" class="h-16 w-auto mb-8">
+            <a href="/" class="mobile-link text-2xl serif text-[var(--brand-text)]">Home</a>
+            <a href="story" class="mobile-link text-2xl serif text-[var(--brand-text)]">Our Story</a>
+            <a href="mixology" class="mobile-link text-2xl serif text-[var(--brand-text)]">Mixology</a>
+            <a href="catalogue" class="mobile-link text-2xl serif text-[var(--brand-text)]">Catalogue</a>
+            <a href="/#contact" class="mobile-link text-2xl serif text-[var(--brand-text)]">Find Us</a>
+            <a href="catalogue" class="mobile-link cta-button px-8 py-3 rounded-2xl mt-4">Get Happy High</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="relative h-[100vh] flex flex-col justify-center items-center overflow-hidden">
+        <video autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover z-0 opacity-90" src="Hero Page.mp4"></video>
+        <div class="text-center z-20 px-4 w-full" id="hero-text-content">
+            <h1 class="text-4xl sm:text-6xl md:text-9xl mb-2 font-bold tracking-[0.1em] text-[var(--bg-dark-1)]" id="hero-hashtag">#GETHAPPYHIGH</h1>
+            <p class="text-lg sm:text-xl md:text-3xl text-[var(--bg-dark-1)] font-light tracking-widest serif" id="hero-subtitle">The Happy High Gin</p>
+        </div>
+    </section>
+
+    <!-- Our Story Section -->
+    <section id="story" class="py-12 md:py-20 bg-[var(--bg-dark-2)] relative mt-[-2px] z-[40]">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center">
+                <span class="section-label">- A NEW KIND OF SPIRIT</span>
+                <h3 class="text-4xl md:text-6xl serif mb-6">Born in Goa. <br><span class="italic text-[var(--brand-gold-dark)]">Slow-Distilled.</span></h3>
+                <p class="text-[var(--brand-text)]/70 max-w-2xl mx-auto font-light leading-relaxed">
+                    Satiwa is a homegrown hemp craft spirits brand founded by Sahil Adwalpalkar. We pioneered India's hemp-infused gin category, crafting spirits that are slow-distilled under a tropical moon.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Catalogue Section -->
+    <section id="catalogue" class="py-16 md:py-32 bg-[var(--bg-dark-1)] relative border-y border-[var(--brand-sage)]/20">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-12 md:mb-20">
+                <span class="section-label">- THE COLLECTION</span>
+                <h3 class="text-4xl md:text-6xl serif">Three Spirits. <span class="italic text-[var(--brand-sage)]">One Philosophy.</span></h3>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                <!-- Original Gin -->
+                <div class="bg-[var(--bg-dark-2)] p-8 rounded-2xl catalogue-item border border-[var(--brand-green)]/30 hover:border-[var(--brand-green)] transition-colors group">
+                                        <div class="h-64 mb-8 flex items-center justify-center rounded-2xl relative overflow-hidden group-hover:scale-105 transition-transform duration-500 carousel">
+                        <button class="carousel-btn prev">&lt;</button>
+                        <button class="carousel-btn next">&gt;</button>
+                        <img src="Satiwa/Gin/Website/1-03.png" class="carousel-img absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 opacity-100" alt="Spirit Image">
+                        <img src="Satiwa/Gin/Website/1-04.png" class="carousel-img absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 opacity-0" alt="Spirit Image">
+                        <img src="Satiwa/Gin/Website/1-05.png" class="carousel-img absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 opacity-0" alt="Spirit Image">
+                    </div>
+                    <div class="flex justify-between items-start mb-4">
+                        <a href="gin"><h4 class="text-3xl serif hover:text-[var(--brand-gold)] transition-colors cursor-pointer">Hemp Craft Gin</h4></a>
+                    </div>
+                    <p class="text-xs uppercase tracking-widest text-[var(--brand-sage)] mb-6">40% ABV, 750ml</p>
+                    <p class="text-[var(--brand-gold)] font-serif italic mb-4">The Original. The Happy High.</p>
+                    <p class="text-[var(--brand-text)]/70 text-sm font-light leading-relaxed">
+                        A London dry gin, Goan at heart, using hemp as a key botanical alongside juniper, orange, black pepper, and cinnamon. Light, fruity and floral on the nose with a distinctly nutty flavour.
+                    </p>
+                </div>
+
+                <!-- Rum -->
+                <div class="bg-[var(--bg-dark-2)] p-8 rounded-2xl catalogue-item border border-[var(--brand-gold)]/30 hover:border-[var(--brand-gold)] transition-colors group mt-0">
+                                        <div class="h-64 mb-8 flex items-center justify-center rounded-2xl relative overflow-hidden group-hover:scale-105 transition-transform duration-500 carousel">
+                        <button class="carousel-btn prev">&lt;</button>
+                        <button class="carousel-btn next">&gt;</button>
+                        <img src="Satiwa/Rum/Instagram/612122858_17988939698868521_364422401203556261_n..jpg" class="carousel-img absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 opacity-100" alt="Spirit Image">
+                        <img src="Satiwa/Rum/Instagram/611293900_17988939722868521_634977155350095960_n..jpg" class="carousel-img absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 opacity-0" alt="Spirit Image">
+                        <img src="Satiwa/Rum/Instagram/624490739_18084629653916165_2287692514378356662_n..webp" class="carousel-img absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 opacity-0" alt="Spirit Image">
+                    </div>
+                    <div class="flex justify-between items-start mb-4">
+                        <a href="rum"><h4 class="text-3xl serif hover:text-[var(--brand-gold)] transition-colors cursor-pointer">Hemp Craft Rum</h4></a>
+                    </div>
+                    <p class="text-xs uppercase tracking-widest text-[var(--brand-sage)] mb-6">40% ABV, 750ml</p>
+                    <p class="text-[var(--brand-gold)] font-serif italic mb-4">Sugarcane. Smoke. Soul.</p>
+                    <p class="text-[var(--brand-text)]/70 text-sm font-light leading-relaxed">
+                        Crafted with notes of cardamom and rich sugarcane warmth. A spirit built for adventure and long, lazy nights.
+                    </p>
+                </div>
+
+                <!-- Pink Gin -->
+                <div class="bg-[var(--bg-dark-2)] p-8 rounded-2xl catalogue-item border border-[var(--brand-rose)]/30 hover:border-[var(--brand-rose)] transition-colors group mt-0">
+                                        <div class="h-64 mb-8 flex items-center justify-center rounded-2xl relative overflow-hidden group-hover:scale-105 transition-transform duration-500 carousel">
+                        <button class="carousel-btn prev">&lt;</button>
+                        <button class="carousel-btn next">&gt;</button>
+                        <img src="Satiwa/Baby/633857535_18036389537772907_7196403506982852034_n..jpg" class="carousel-img absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 opacity-100" alt="Spirit Image">
+                        <img src="Satiwa/Baby/654728447_18040236923772907_8120548064621283797_n..jpg" class="carousel-img absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 opacity-0" alt="Spirit Image">
+                        <img src="Satiwa/Baby/670596625_18043564616772907_5239028001866364394_n..jpg" class="carousel-img absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 opacity-0" alt="Spirit Image">
+                    </div>
+                    <div class="flex justify-between items-start mb-4">
+                        <a href="pink-gin"><h4 class="text-3xl serif hover:text-[var(--brand-gold)] transition-colors cursor-pointer">Baby Pink Gin</h4></a>
+                    </div>
+                    <p class="text-xs uppercase tracking-widest text-[var(--brand-sage)] mb-6">40% ABV, 750ml</p>
+                    <p class="text-[var(--brand-gold)] font-serif italic mb-4">Soft. Sharp. Strawberry-Bright.</p>
+                    <p class="text-[var(--brand-text)]/70 text-sm font-light leading-relaxed">
+                        A sweeter, fruit-forward variant with a vibrant pink character for playful, spirited occasions.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="text-center mt-16">
+                <a href="catalogue" class="cta-button px-10 py-4 rounded-2xl text-sm inline-block">Explore The Shop</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mixology Section (Horizontal Scroll) -->
+    <section id="mixology" class="py-16 md:py-32 bg-[var(--bg-dark-2)] relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6 mb-8 md:mb-12">
+            <span class="section-label">- THE RITUAL</span>
+            <div class="flex justify-between items-end">
+                <h3 class="text-4xl md:text-6xl serif">Mixology</h3>
+                <div class="hidden md:flex gap-2 text-[var(--brand-sage)]">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                    <span class="text-xs uppercase tracking-widest">Scroll</span>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Horizontal Scroll Container -->
+        <div class="flex overflow-x-auto hide-scrollbar pl-6 md:pl-[calc((100vw-80rem)/2+1.5rem)] pr-6 pb-12 gap-6" id="mixology-scroll">
+            
+            <!-- Recipe 1 -->
+            <div class="mixology-item min-w-[300px] md:min-w-[400px] snap-center glass-panel p-8 rounded-2xl flex-shrink-0">
+                <div class="h-48 w-full bg-gradient-to-b from-[var(--brand-gold)]/20 to-transparent rounded-2xl mb-6 overflow-hidden flex items-center justify-center">
+                    <img src="Satiwa/Rum/Instagram/587796466_17987133986868521_3658983187964303202_n..jpg" alt="Goan Sunset" class="h-full w-full object-cover mix-blend-multiply opacity-80">
+                </div>
+                <p class="text-[10px] text-[var(--brand-gold)] uppercase tracking-widest mb-2">Hemp Craft Gin</p>
+                <h4 class="text-3xl serif mb-4">The Goan Sunset</h4>
+                <ul class="text-sm text-[var(--brand-text)]/70 space-y-3 border-l border-[var(--brand-sage)]/30 pl-4">
+                    <li>50ml Satiwa Hemp Craft Gin</li>
+                    <li>20ml Fresh Grapefruit Juice</li>
+                    <li>10ml Rosemary Syrup</li>
+                    <li>Top with Tonic Water</li>
+                </ul>
+            </div>
+
+            <!-- Recipe 2 -->
+            <div class="mixology-item min-w-[300px] md:min-w-[400px] snap-center glass-panel p-8 rounded-2xl flex-shrink-0">
+                <div class="h-48 w-full bg-gradient-to-b from-[var(--brand-rose)]/20 to-transparent rounded-2xl mb-6 overflow-hidden flex items-center justify-center">
+                    <img src="Satiwa/Baby/670711860_18043561049772907_3815601014844355306_n..jpg" alt="Strawberry Blush" class="h-full w-full object-cover mix-blend-multiply opacity-80">
+                </div>
+                <p class="text-[10px] text-[var(--brand-rose)] uppercase tracking-widest mb-2">Baby Pink Gin</p>
+                <h4 class="text-3xl serif mb-4">Strawberry Blush</h4>
+                <ul class="text-sm text-[var(--brand-text)]/70 space-y-3 border-l border-[var(--brand-sage)]/30 pl-4">
+                    <li>50ml Satiwa Baby Pink Gin</li>
+                    <li>15ml Fresh Lemon Juice</li>
+                    <li>1 Egg White (or aquafaba)</li>
+                    <li>Fresh Muddled Strawberries</li>
+                </ul>
+            </div>
+
+            <!-- Recipe 3 -->
+            <div class="mixology-item min-w-[300px] md:min-w-[400px] snap-center glass-panel p-8 rounded-2xl flex-shrink-0">
+                <div class="h-48 w-full bg-gradient-to-b from-[var(--brand-gold-dark)]/20 to-transparent rounded-2xl mb-6 overflow-hidden flex items-center justify-center">
+                    <img src="Satiwa/Gin/Instagram/1-08.png" alt="Tropical Storm" class="h-full w-full object-cover mix-blend-multiply opacity-80">
+                </div>
+                <p class="text-[10px] text-[var(--brand-gold-dark)] uppercase tracking-widest mb-2">Hemp Craft Rum</p>
+                <h4 class="text-3xl serif mb-4">Tropical Storm</h4>
+                <ul class="text-sm text-[var(--brand-text)]/70 space-y-3 border-l border-[var(--brand-sage)]/30 pl-4">
+                    <li>60ml Satiwa Hemp Craft Rum</li>
+                    <li>15ml Fresh Lime Juice</li>
+                    <li>2 Dashes Angostura Bitters</li>
+                    <li>Top with Spicy Ginger Beer</li>
+                </ul>
+            </div>
+
+            <!-- Recipe 4 -->
+            <div class="mixology-item min-w-[300px] md:min-w-[400px] snap-center glass-panel p-8 rounded-2xl flex-shrink-0">
+                <div class="h-48 w-full bg-gradient-to-b from-[var(--brand-green)]/20 to-transparent rounded-2xl mb-6 overflow-hidden flex items-center justify-center">
+                    <img src="Satiwa/Rum/Instagram/610811174_18335009059210212_7642357163351596114_n..jpg" alt="Hemp Mojito" class="h-full w-full object-cover mix-blend-multiply opacity-80">
+                </div>
+                <p class="text-[10px] text-[var(--brand-gold-dark)] uppercase tracking-widest mb-2">Hemp Craft Rum</p>
+                <h4 class="text-3xl serif mb-4">Hemp Mojito</h4>
+                <ul class="text-sm text-[var(--brand-text)]/70 space-y-3 border-l border-[var(--brand-sage)]/30 pl-4">
+                    <li>50ml Satiwa Hemp Craft Rum</li>
+                    <li>Fresh Mint Leaves</li>
+                    <li>20ml Lime Juice</li>
+                    <li>Top with Soda Water</li>
+                </ul>
+            </div>
+
+            <!-- Recipe 5 -->
+            <div class="mixology-item min-w-[300px] md:min-w-[400px] snap-center glass-panel p-8 rounded-2xl flex-shrink-0">
+                <div class="h-48 w-full bg-gradient-to-b from-[var(--brand-rose)]/20 to-transparent rounded-2xl mb-6 overflow-hidden flex items-center justify-center">
+                    <img src="Satiwa/Baby/670861657_18043564502772907_4828334460202877568_n..jpg" alt="Rose Petal Martini" class="h-full w-full object-cover mix-blend-multiply opacity-80">
+                </div>
+                <p class="text-[10px] text-[var(--brand-rose)] uppercase tracking-widest mb-2">Baby Pink Gin</p>
+                <h4 class="text-3xl serif mb-4">Rose Petal Martini</h4>
+                <ul class="text-sm text-[var(--brand-text)]/70 space-y-3 border-l border-[var(--brand-sage)]/30 pl-4">
+                    <li>60ml Satiwa Baby Pink Gin</li>
+                    <li>10ml Dry Vermouth</li>
+                    <li>5ml Rose Syrup</li>
+                    <li>Garnish with Edible Rose</li>
+                </ul>
+            </div>
+
+            <!-- Recipe 6 -->
+            <div class="mixology-item min-w-[300px] md:min-w-[400px] snap-center glass-panel p-8 rounded-2xl flex-shrink-0">
+                <div class="h-48 w-full bg-gradient-to-b from-[var(--brand-gold)]/20 to-transparent rounded-2xl mb-6 overflow-hidden flex items-center justify-center">
+                    <img src="Satiwa/Gin/Instagram/1-05.png" alt="The Classic High" class="h-full w-full object-cover mix-blend-multiply opacity-80">
+                </div>
+                <p class="text-[10px] text-[var(--brand-gold-dark)] uppercase tracking-widest mb-2">Hemp Craft Gin</p>
+                <h4 class="text-3xl serif mb-4">The Classic High</h4>
+                <ul class="text-sm text-[var(--brand-text)]/70 space-y-3 border-l border-[var(--brand-sage)]/30 pl-4">
+                    <li>50ml Satiwa Hemp Craft Gin</li>
+                    <li>150ml Indian Tonic</li>
+                    <li>Cucumber Ribbon</li>
+                    <li>Juniper Berries</li>
+                </ul>
+            </div>
+            
+            <!-- Padding element for end of scroll -->
+            <div class="min-w-[20px] md:min-w-[5vw]"></div>
+        </div>
+
+        <!-- Navigation Arrows -->
+        <div class="absolute inset-y-0 left-0 w-16 md:w-32 bg-gradient-to-r from-[var(--bg-dark-2)] via-[var(--bg-dark-2)]/80 to-transparent z-10 flex items-center justify-start pl-2 md:pl-6 pointer-events-none mt-24">
+            <button id="mixology-prev" class="pointer-events-auto w-10 h-10 md:w-14 md:h-14 rounded-full bg-[var(--bg-dark-1)] border border-[var(--brand-sage)]/50 text-[var(--brand-text)] flex items-center justify-center hover:bg-[var(--brand-gold)] hover:text-white hover:border-[var(--brand-gold)] transition-all shadow-lg cursor-pointer">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+            </button>
+        </div>
+        <div class="absolute inset-y-0 right-0 w-16 md:w-32 bg-gradient-to-l from-[var(--bg-dark-2)] via-[var(--bg-dark-2)]/80 to-transparent z-10 flex items-center justify-end pr-2 md:pr-6 pointer-events-none mt-24">
+            <button id="mixology-next" class="pointer-events-auto w-10 h-10 md:w-14 md:h-14 rounded-full bg-[var(--bg-dark-1)] border border-[var(--brand-sage)]/50 text-[var(--brand-text)] flex items-center justify-center hover:bg-[var(--brand-gold)] hover:text-white hover:border-[var(--brand-gold)] transition-all shadow-lg cursor-pointer">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+        </div>
+    </section>
+
+    <!-- Availability Section with Map -->
+    <section id="contact" class="py-16 md:py-32 bg-[var(--bg-dark-1)] border-t border-[var(--brand-sage)]/20">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-12">
+                <span class="section-label">- AVAILABILITY</span>
+                <h3 class="text-4xl serif mb-6">Where to find us</h3>
+                <p class="text-[var(--brand-text)]/70 font-light max-w-2xl mx-auto leading-relaxed">
+                    Satiwa is currently available at select premium liquor stores, bars, and experience centers across India. Explore the map below to find the nearest stockist.
+                </p>
+            </div>
+            
+            <div class="w-full rounded-2xl overflow-hidden shadow-2xl border border-[var(--brand-sage)]/20" style="height: 600px; z-index: 10;">
+                <div id="availability-map" class="w-full h-full"></div>
+            </div>
+        </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-[#050505] pt-20 pb-12 border-t border-[var(--brand-sage)]/30 text-center">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="text-4xl serif mb-2 text-[var(--brand-text)] tracking-widest">SATIWA</h2>
+            <p class="text-[var(--brand-gold-dark)] mb-10 text-sm font-serif italic">The Happy High Gin</p>
+            
+            <div class="flex justify-center gap-8 mb-12">
+                <a href="#" class="text-[var(--brand-sage)] hover:text-[var(--brand-gold)] transition-colors text-xs uppercase tracking-widest">Instagram</a>
+                <a href="#" class="text-[var(--brand-sage)] hover:text-[var(--brand-gold)] transition-colors text-xs uppercase tracking-widest">Twitter</a>
+                <a href="#" class="text-[var(--brand-sage)] hover:text-[var(--brand-gold)] transition-colors text-xs uppercase tracking-widest">Facebook</a>
+            </div>
+            
+            <div class="border-t border-white/5 pt-8">
+                <p class="text-xs text-[var(--brand-text)]/50 uppercase tracking-[0.2em] mb-4 font-bold">
+                    DRINK RESPONSIBLY. NOT FOR SALE TO PERSONS UNDER 18.
+                </p>
+                <p class="text-[10px] text-[var(--brand-text)]/30">© 2026 Satiwa Hemp Craft Spirits. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Age Gate Logic
+        document.addEventListener("DOMContentLoaded", () => {
+            if(localStorage.getItem('satiwa_age_verified') === 'true') {
+                const ageGate = document.getElementById('age-gate');
+                if(ageGate) ageGate.style.display = 'none';
+                document.body.classList.remove('overflow-hidden');
+            }
+        });
+
+        function enterSite() {
+            localStorage.setItem('satiwa_age_verified', 'true');
+            const ageGate = document.getElementById('age-gate');
+            if(ageGate) ageGate.style.opacity = '0';
+            setTimeout(() => {
+                if(ageGate) ageGate.style.display = 'none';
+                document.body.classList.remove('overflow-hidden');
+                if (typeof initAnimations === 'function') {
+                    try { initAnimations(); } catch(e) { console.error(e); }
+                }
+            }, 500);
+        }
+
+        function denySite() {
+            document.getElementById('age-error').classList.remove('hidden');
+        }
+
+        // Mobile Menu Logic
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+        let menuOpen = false;
+
+        mobileBtn.addEventListener('click', () => {
+            menuOpen = !menuOpen;
+            if(menuOpen) {
+                mobileMenu.classList.remove('translate-x-full');
+            } else {
+                mobileMenu.classList.add('translate-x-full');
+            }
+        });
+
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                menuOpen = false;
+                mobileMenu.classList.add('translate-x-full');
+            });
+        });
+
+        // Navbar Scroll Effect
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if(window.scrollY > 50) {
+                nav.classList.add('bg-[var(--bg-dark-1)]/90', 'backdrop-blur-md', 'shadow-lg', 'border-b', 'border-[var(--brand-sage)]/20');
+            } else {
+                nav.classList.remove('bg-[var(--bg-dark-1)]/90', 'backdrop-blur-md', 'shadow-lg', 'border-b', 'border-[var(--brand-sage)]/20');
+            }
+        });
+
+        
+        // Carousel Logic
+        document.querySelectorAll('.carousel').forEach(carousel => {
+            const imgs = carousel.querySelectorAll('.carousel-img');
+            const prev = carousel.querySelector('.prev');
+            const next = carousel.querySelector('.next');
+            let idx = 0;
+            let timer;
+            
+            const show = (i) => {
+                imgs[idx].classList.remove('opacity-100');
+                imgs[idx].classList.add('opacity-0');
+                idx = (i + imgs.length) % imgs.length;
+                if (idx < 0) idx += imgs.length;
+                imgs[idx].classList.remove('opacity-0');
+                imgs[idx].classList.add('opacity-100');
+            };
+            
+            const startTimer = () => {
+                clearInterval(timer);
+                timer = setInterval(() => show(idx + 1), 6000); // 6 seconds, slow switch
+            };
+            
+            prev.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); show(idx - 1); startTimer(); });
+            next.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); show(idx + 1); startTimer(); });
+            
+            startTimer();
+        });
+
+        // GSAP Animations
+        gsap.registerPlugin(ScrollTrigger);
+
+        function initAnimations() {
+            // Initial Hero Animation
+            gsap.to("#hero-hashtag", {
+                y: 0,
+                opacity: 1,
+                duration: 1.2,
+                ease: "power3.out",
+                delay: 0.2
+            });
+            gsap.to("#hero-subtitle", {
+                opacity: 1,
+                duration: 1,
+                delay: 0.8
+            });
+
+
+            // Catalogue Animations
+            gsap.from(".catalogue-item", {
+                scrollTrigger: {
+                    trigger: "#catalogue",
+                    start: "top 60%",
+                },
+                y: 50,
+                opacity: 0,
+                duration: 1,
+                stagger: 0.2,
+                ease: "power2.out"
+            });
+        }
+
+        // Mixology Rolling Animation
+        const mixologyScroll = document.getElementById('mixology-scroll');
+        if (mixologyScroll) {
+            const originalItems = Array.from(mixologyScroll.querySelectorAll('.mixology-item'));
+            
+            // Duplicate items for circular loop
+            for (let i = 0; i < 6; i++) {
+                originalItems.forEach(item => {
+                    const clone = item.cloneNode(true);
+                    mixologyScroll.appendChild(clone);
+                });
+            }
+
+            // Intersection Observer for Focus/Blur effect
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting && entry.intersectionRatio >= 0.8) {
+                        entry.target.style.filter = 'blur(0px)';
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'scale(1)';
+                    } else {
+                        entry.target.style.filter = 'blur(4px)';
+                        entry.target.style.opacity = '0.4';
+                        entry.target.style.transform = 'scale(0.95)';
+                    }
+                });
+            }, {
+                root: mixologyScroll,
+                threshold: [0.1, 0.8]
+            });
+
+            // Initialize all items
+            mixologyScroll.querySelectorAll('.mixology-item').forEach(item => {
+                item.style.transition = 'filter 0.5s ease, opacity 0.5s ease, transform 0.5s ease';
+                observer.observe(item);
+            });
+
+            // Initial jump to middle to allow scrolling in both directions
+            setTimeout(() => {
+                const itemWidth = mixologyScroll.querySelector('.mixology-item').offsetWidth + 24;
+                mixologyScroll.scrollLeft = itemWidth * originalItems.length * 3;
+            }, 100);
+
+            let scrollDirection = 0;
+            let animationFrameId;
+            const scrollSpeed = 6; // pixels per frame
+
+            const smoothScrollLoop = () => {
+                if (scrollDirection !== 0) {
+                    mixologyScroll.scrollLeft += scrollDirection * scrollSpeed;
+                }
+                animationFrameId = requestAnimationFrame(smoothScrollLoop);
+            };
+            smoothScrollLoop();
+
+            const prevBtn = document.getElementById('mixology-prev');
+            const nextBtn = document.getElementById('mixology-next');
+
+            if (prevBtn) {
+                prevBtn.addEventListener('mouseenter', () => scrollDirection = -1);
+                prevBtn.addEventListener('mouseleave', () => scrollDirection = 0);
+                prevBtn.addEventListener('touchstart', (e) => { e.preventDefault(); scrollDirection = -1; });
+                prevBtn.addEventListener('touchend', () => scrollDirection = 0);
+            }
+            if (nextBtn) {
+                nextBtn.addEventListener('mouseenter', () => scrollDirection = 1);
+                nextBtn.addEventListener('mouseleave', () => scrollDirection = 0);
+                nextBtn.addEventListener('touchstart', (e) => { e.preventDefault(); scrollDirection = 1; });
+                nextBtn.addEventListener('touchend', () => scrollDirection = 0);
+            }
+
+            // Infinite scroll jump
+            mixologyScroll.addEventListener('scroll', () => {
+                const itemWidth = mixologyScroll.querySelector('.mixology-item').offsetWidth + 24;
+                const totalWidth = itemWidth * originalItems.length;
+                
+                if (mixologyScroll.scrollLeft > totalWidth * 5) {
+                    mixologyScroll.scrollLeft -= totalWidth * 2;
+                } else if (mixologyScroll.scrollLeft < totalWidth) {
+                    mixologyScroll.scrollLeft += totalWidth * 2;
+                }
+            });
+
+            // Auto Scroll
+            let scrollInterval;
+            const startAutoScroll = () => {
+                clearInterval(scrollInterval);
+                scrollInterval = setInterval(() => {
+                    const item = mixologyScroll.querySelector('.mixology-item');
+                    if (item) {
+                        const itemWidth = item.offsetWidth + 24;
+                        mixologyScroll.scrollBy({ left: itemWidth, behavior: 'smooth' });
+                    }
+                }, 4000);
+            };
+            
+            startAutoScroll();
+
+            // Pause auto scroll on mouse hover or touch
+            mixologyScroll.addEventListener('mouseenter', () => clearInterval(scrollInterval));
+            mixologyScroll.addEventListener('mouseleave', startAutoScroll);
+            mixologyScroll.addEventListener('touchstart', () => clearInterval(scrollInterval));
+            mixologyScroll.addEventListener('touchend', startAutoScroll);
+        }
+
+        // Initialize Map
+        document.addEventListener('DOMContentLoaded', () => {
+            if(document.getElementById('availability-map')) {
+                // Center between Mumbai and Goa
+                const map = L.map('availability-map').setView([17.5, 73.5], 7); 
+                
+                L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                    subdomains: 'abcd',
+                    maxZoom: 19
+                }).addTo(map);
+
+                // Custom Icons
+                const iconStore = L.divIcon({ className: 'custom-div-icon', html: "<div style='background-color:#0170B9;width:12px;height:12px;border-radius:50%;border:2px solid white;box-shadow:0 0 4px rgba(0,0,0,0.5);'></div>", iconSize: [12, 12], iconAnchor: [6, 6]});
+                const iconBar = L.divIcon({ className: 'custom-div-icon', html: "<div style='background-color:#F4D03F;width:12px;height:12px;border-radius:50%;border:2px solid white;box-shadow:0 0 4px rgba(0,0,0,0.5);'></div>", iconSize: [12, 12], iconAnchor: [6, 6]});
+                const iconExp = L.divIcon({ className: 'custom-div-icon', html: "<div style='background-color:#E74C3C;width:12px;height:12px;border-radius:50%;border:2px solid white;box-shadow:0 0 4px rgba(0,0,0,0.5);'></div>", iconSize: [12, 12], iconAnchor: [6, 6]});
+
+                // Generate 27 Dummy Locations in Goa & Maharashtra
+                const dummyLocations = [
+                    // GOA
+                    { lat: 15.5494, lng: 73.7535, name: "Anjuna Beach Spirits", type: "Store", icon: iconStore },
+                    { lat: 15.6026, lng: 73.7371, name: "Vagator Cliff Lounge", type: "Bar", icon: iconBar },
+                    { lat: 15.5401, lng: 73.7536, name: "Baga Mixology Hub", type: "Experience Center", icon: iconExp },
+                    { lat: 15.4989, lng: 73.8278, name: "Panjim Central Liquors", type: "Store", icon: iconStore },
+                    { lat: 15.2993, lng: 73.9740, name: "Margao Satiwa Flagship", type: "Experience Center", icon: iconExp },
+                    { lat: 15.0080, lng: 74.0229, name: "Palolem Beach Bar", type: "Bar", icon: iconBar },
+                    { lat: 15.5230, lng: 73.7668, name: "Calangute Wine Shop", type: "Store", icon: iconStore },
+                    { lat: 15.6300, lng: 73.7126, name: "Morjim Sunset Bar", type: "Bar", icon: iconBar },
+                    { lat: 15.2500, lng: 73.9110, name: "Colva Spirits", type: "Store", icon: iconStore },
+                    
+                    // MUMBAI & SURROUNDINGS (MAHARASHTRA)
+                    { lat: 19.0522, lng: 72.8361, name: "Bandra Mixology Co.", type: "Bar", icon: iconBar },
+                    { lat: 19.1136, lng: 72.8697, name: "Andheri Fine Wines", type: "Store", icon: iconStore },
+                    { lat: 18.9220, lng: 72.8347, name: "Colaba Tasting Room", type: "Experience Center", icon: iconExp },
+                    { lat: 19.0176, lng: 72.8562, name: "Dadar Spirits", type: "Store", icon: iconStore },
+                    { lat: 19.0896, lng: 72.8258, name: "Juhu Beach Club", type: "Bar", icon: iconBar },
+                    { lat: 19.1350, lng: 72.8310, name: "Lokhandwala Liquors", type: "Store", icon: iconStore },
+                    { lat: 19.2183, lng: 72.8133, name: "Borivali West Outpost", type: "Store", icon: iconStore },
+                    { lat: 19.0330, lng: 73.0297, name: "Navi Mumbai Lounge", type: "Bar", icon: iconBar },
+                    { lat: 19.2000, lng: 72.9780, name: "Thane Social", type: "Experience Center", icon: iconExp },
+
+                    // PUNE & OTHER MH LOCATIONS
+                    { lat: 18.5204, lng: 73.8567, name: "Pune FC Road Bar", type: "Bar", icon: iconBar },
+                    { lat: 18.5606, lng: 73.9103, name: "Viman Nagar Store", type: "Store", icon: iconStore },
+                    { lat: 18.5362, lng: 73.8940, name: "Koregaon Park Lounge", type: "Experience Center", icon: iconExp },
+                    { lat: 18.4636, lng: 73.8682, name: "Katraj Liquors", type: "Store", icon: iconStore },
+                    { lat: 18.5913, lng: 73.7389, name: "Hinjewadi Spirits", type: "Store", icon: iconStore },
+                    { lat: 18.7300, lng: 73.4200, name: "Lonavala Weekend Stop", type: "Store", icon: iconStore },
+                    { lat: 19.9975, lng: 73.7898, name: "Nashik Vineyards Bar", type: "Bar", icon: iconBar },
+                    { lat: 16.7050, lng: 74.2433, name: "Kolhapur Reserve", type: "Store", icon: iconStore },
+                    { lat: 17.6599, lng: 73.4419, name: "Ratnagiri Coastal Club", type: "Bar", icon: iconBar }
+                ];
+
+                dummyLocations.forEach(loc => {
+                    L.marker([loc.lat, loc.lng], {icon: loc.icon})
+                        .addTo(map)
+                        .bindPopup(`<b>${loc.name}</b><br>${loc.type}`);
+                });
+            }
+        });
+    </script>
+
+    <script>
+        // Flowy Page Transitions
+        document.addEventListener("DOMContentLoaded", () => {
+            document.querySelectorAll('a[href]').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    const href = this.getAttribute('href');
+                    if (href && !href.startsWith('#') && href !== '#' && this.target !== '_blank') {
+                        const isSamePage = this.hostname === window.location.hostname && this.pathname === window.location.pathname;
+                        if (!isSamePage) {
+                            e.preventDefault();
+                            const targetUrl = this.href;
+                            document.body.classList.add('page-transition-out');
+                            setTimeout(() => {
+                                window.location.href = targetUrl;
+                            }, 550);
+                        }
+                    }
+                });
+            });
+        });
+        window.addEventListener("pageshow", function (event) {
+            if (event.persisted) {
+                document.body.classList.remove('page-transition-out');
+            }
+        });
+    </script>
+</body>
+</html>
+
