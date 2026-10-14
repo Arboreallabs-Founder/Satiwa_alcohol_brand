@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
-    <title>Satiwa | Hemp Craft Spirits</title>
-    <link rel="icon" type="image/png" href="Satiwa light logo.png">
+    <title>A Labs Spiritz | Hemp Craft Spirits</title>
+    <link rel="icon" type="image/svg+xml" href="assets/brand/a-labs-spiritz-mark.svg">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
@@ -13,7 +13,16 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <style>
-        /* Satiwa Brand Guidelines 2026 */
++        /* Keep portrait bottle photography fully visible in every card and carousel. */
+        img[src$="a-labs-gin.png"],
+        img[src$="a-labs-pink-gin.png"],
+        img[src$="a-labs-dark-rum.png"] {
+            object-fit: contain !important;
+            object-position: center;
+            padding: 0.75rem;
+        }
+
+        /* A Labs Spiritz Brand Guidelines 2026 */
         :root {
             --bg-dark-1: #ffffff;
             --bg-dark-2: #f5f5f5;
@@ -97,6 +106,10 @@
             transform: translateY(-15px) !important;
             transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1) !important;
         }
+        /* Light logo over the dark hero video; colour logo once the nav turns white on scroll */
+        #navbar .nav-logo-color { display: none; }
+        #navbar.shadow-lg .nav-logo-light { display: none; }
+        #navbar.shadow-lg .nav-logo-color { display: block; }
     </style>
 </head>
 <body class="antialiased overflow-hidden">
@@ -105,7 +118,7 @@
     <!-- Age Gate Modal -->
     <div id="age-gate" class="fixed inset-0 z-[100] flex items-center justify-center transition-opacity duration-500">
         <div class="bg-[var(--bg-dark-1)] p-10 md:p-14 rounded-xl max-w-md w-full mx-4 text-center border border-[var(--brand-sage)] shadow-2xl">
-            <h2 class="text-4xl md:text-5xl serif mb-1 text-[var(--brand-text)] tracking-widest">SATIWA</h2>
+            <h2 class="text-4xl md:text-5xl serif mb-1 text-[var(--brand-text)] tracking-widest">A LABS SPIRITZ</h2>
             <p class="text-[var(--brand-gold-dark)] mb-8 uppercase tracking-[0.3em] text-xs">Hemp Craft Spirits</p>
             <h3 class="text-lg mb-6 text-[var(--brand-text)] font-light">Are you of legal drinking age?</h3>
             <div class="flex gap-4 justify-center mb-8">
@@ -117,7 +130,7 @@
                 <p class="text-[10px] text-[var(--brand-sage)] uppercase tracking-widest leading-relaxed">
                     DRINK RESPONSIBLY.<br>NOT FOR SALE TO PERSONS UNDER 18.
                 </p>
-                <p class="text-[10px] text-[var(--brand-text)]/60 mt-4 leading-relaxed">Unofficial concept redesign by Siddhant Baliga. Not affiliated with or endorsed by Satiwa. All trademarks and imagery belong to their respective owners.</p>
+                <p class="text-[10px] text-[var(--brand-text)]/60 mt-4 leading-relaxed">A Labs Spiritz — crafted in small batches. Please enjoy responsibly.</p>
             </div>
         </div>
     </div>
@@ -125,7 +138,7 @@
     <!-- Navigation -->
     <nav class="fixed w-full z-50 transition-all duration-300 px-6 py-4" id="navbar">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <a href="/" class="z-50"><img src="Satiwa light logo.png" alt="Satiwa Logo" class="h-10 w-auto"></a>
+            <a href="/" class="z-50"><img src="assets/brand/a-labs-spiritz-logo-light.svg" alt="A Labs Spiritz Logo" class="nav-logo-light h-10 w-auto"><img src="assets/brand/a-labs-spiritz-logo.svg" alt="" aria-hidden="true" class="nav-logo-color h-10 w-auto"></a>
             
             <!-- Desktop Menu -->
             <div class="hidden md:flex gap-8 items-center">
@@ -150,7 +163,7 @@
     <!-- Mobile Menu Overlay -->
         <div id="mobile-menu" class="fixed inset-0 bg-[var(--bg-dark-1)] z-[100] transform translate-x-full transition-transform duration-300 flex flex-col items-center justify-center gap-8">
                         <button class="absolute top-6 right-6 text-[var(--brand-text)] focus:outline-none mobile-link"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path></svg></button>
-<img src="Satiwa light logo.png" alt="Satiwa Logo" class="h-16 w-auto mb-8">
+<img src="assets/brand/a-labs-spiritz-logo.svg" alt="A Labs Spiritz Logo" class="h-16 w-auto mb-8">
             <a href="/" class="mobile-link text-2xl serif text-[var(--brand-text)]">Home</a>
             <a href="story" class="mobile-link text-2xl serif text-[var(--brand-text)]">Our Story</a>
             <a href="mixology" class="mobile-link text-2xl serif text-[var(--brand-text)]">Mixology</a>
@@ -161,7 +174,7 @@
 
     <!-- Hero Section -->
     <section id="home" class="relative h-[100vh] flex flex-col justify-center items-center overflow-hidden">
-        <video autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover z-0 opacity-90" src="Hero Page.mp4"></video>
+        <video autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover z-0 opacity-90" src="Alabs Spiritz.mp4"></video>
         <div class="text-center z-20 px-4 w-full" id="hero-text-content">
             <h1 class="text-4xl sm:text-6xl md:text-9xl mb-2 font-bold tracking-[0.1em] text-[var(--bg-dark-1)]" id="hero-hashtag">#GETHAPPYHIGH</h1>
             <p class="text-lg sm:text-xl md:text-3xl text-[var(--bg-dark-1)] font-light tracking-widest serif" id="hero-subtitle">The Happy High Gin</p>
@@ -175,7 +188,7 @@
                 <span class="section-label">- A NEW KIND OF SPIRIT</span>
                 <h3 class="text-4xl md:text-6xl serif mb-6">Born in Goa. <br><span class="italic text-[var(--brand-gold-dark)]">Slow-Distilled.</span></h3>
                 <p class="text-[var(--brand-text)]/70 max-w-2xl mx-auto font-light leading-relaxed">
-                    Satiwa is a homegrown hemp craft spirits brand founded by Sahil Adwalpalkar. We pioneered India's hemp-infused gin category, crafting spirits that are slow-distilled under a tropical moon.
+                    A Labs Spiritz is a homegrown craft spirits house built around curiosity, bold botanicals, and small-batch experimentation. Our gin and rum are slow-distilled under a tropical moon.
                 </p>
             </div>
         </div>
@@ -195,9 +208,9 @@
                                         <div class="h-64 mb-8 flex items-center justify-center rounded-2xl relative overflow-hidden group-hover:scale-105 transition-transform duration-500 carousel">
                         <button class="carousel-btn prev">&lt;</button>
                         <button class="carousel-btn next">&gt;</button>
-                        <img src="Satiwa/Gin/Website/1-03.png" class="carousel-img absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 opacity-100" alt="Spirit Image">
-                        <img src="Satiwa/Gin/Website/1-04.png" class="carousel-img absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 opacity-0" alt="Spirit Image">
-                        <img src="Satiwa/Gin/Website/1-05.png" class="carousel-img absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 opacity-0" alt="Spirit Image">
+                        <img src="assets/brand/a-labs-gin.png" class="carousel-img absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 opacity-100" alt="Spirit Image">
+                        <img src="assets/brand/a-labs-gin.png" class="carousel-img absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 opacity-0" alt="Spirit Image">
+                        <img src="assets/brand/a-labs-gin.png" class="carousel-img absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 opacity-0" alt="Spirit Image">
                     </div>
                     <div class="flex justify-between items-start mb-4">
                         <a href="gin"><h4 class="text-3xl serif hover:text-[var(--brand-gold)] transition-colors cursor-pointer">Hemp Craft Gin</h4></a>
@@ -214,9 +227,9 @@
                                         <div class="h-64 mb-8 flex items-center justify-center rounded-2xl relative overflow-hidden group-hover:scale-105 transition-transform duration-500 carousel">
                         <button class="carousel-btn prev">&lt;</button>
                         <button class="carousel-btn next">&gt;</button>
-                        <img src="Satiwa/Rum/Instagram/612122858_17988939698868521_364422401203556261_n..jpg" class="carousel-img absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 opacity-100" alt="Spirit Image">
-                        <img src="Satiwa/Rum/Instagram/611293900_17988939722868521_634977155350095960_n..jpg" class="carousel-img absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 opacity-0" alt="Spirit Image">
-                        <img src="Satiwa/Rum/Instagram/624490739_18084629653916165_2287692514378356662_n..webp" class="carousel-img absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 opacity-0" alt="Spirit Image">
+                        <img src="assets/brand/a-labs-dark-rum.png" class="carousel-img absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 opacity-100" alt="Spirit Image">
+                        <img src="assets/brand/a-labs-dark-rum.png" class="carousel-img absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 opacity-0" alt="Spirit Image">
+                        <img src="assets/brand/a-labs-dark-rum.png" class="carousel-img absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 opacity-0" alt="Spirit Image">
                     </div>
                     <div class="flex justify-between items-start mb-4">
                         <a href="rum"><h4 class="text-3xl serif hover:text-[var(--brand-gold)] transition-colors cursor-pointer">Hemp Craft Rum</h4></a>
@@ -233,9 +246,9 @@
                                         <div class="h-64 mb-8 flex items-center justify-center rounded-2xl relative overflow-hidden group-hover:scale-105 transition-transform duration-500 carousel">
                         <button class="carousel-btn prev">&lt;</button>
                         <button class="carousel-btn next">&gt;</button>
-                        <img src="Satiwa/Baby/633857535_18036389537772907_7196403506982852034_n..jpg" class="carousel-img absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 opacity-100" alt="Spirit Image">
-                        <img src="Satiwa/Baby/654728447_18040236923772907_8120548064621283797_n..jpg" class="carousel-img absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 opacity-0" alt="Spirit Image">
-                        <img src="Satiwa/Baby/670596625_18043564616772907_5239028001866364394_n..jpg" class="carousel-img absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 opacity-0" alt="Spirit Image">
+                        <img src="assets/brand/a-labs-pink-gin.png" class="carousel-img absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 opacity-100" alt="Spirit Image">
+                        <img src="assets/brand/a-labs-pink-gin.png" class="carousel-img absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 opacity-0" alt="Spirit Image">
+                        <img src="assets/brand/a-labs-pink-gin.png" class="carousel-img absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 opacity-0" alt="Spirit Image">
                     </div>
                     <div class="flex justify-between items-start mb-4">
                         <a href="pink-gin"><h4 class="text-3xl serif hover:text-[var(--brand-gold)] transition-colors cursor-pointer">Baby Pink Gin</h4></a>
@@ -274,12 +287,12 @@
             <!-- Recipe 1 -->
             <div class="mixology-item w-[85vw] md:w-auto md:min-w-[400px] snap-center glass-panel p-8 rounded-2xl flex-shrink-0">
                 <div class="h-48 w-full bg-gradient-to-b from-[var(--brand-gold)]/20 to-transparent rounded-2xl mb-6 overflow-hidden flex items-center justify-center">
-                    <img src="Satiwa/Rum/Instagram/587796466_17987133986868521_3658983187964303202_n..jpg" alt="Goan Sunset" class="h-full w-full object-cover mix-blend-multiply opacity-80">
+                    <img src="assets/mixology/goan-sunset.png" alt="Goan Sunset" class="h-full w-full object-cover mix-blend-multiply opacity-80">
                 </div>
                 <p class="text-[10px] text-[var(--brand-gold)] uppercase tracking-widest mb-2">Hemp Craft Gin</p>
                 <h4 class="text-3xl serif mb-4">The Goan Sunset</h4>
                 <ul class="text-sm text-[var(--brand-text)]/70 space-y-3 border-l border-[var(--brand-sage)]/30 pl-4">
-                    <li>50ml Satiwa Hemp Craft Gin</li>
+                    <li>50ml A Labs Spiritz Hemp Craft Gin</li>
                     <li>20ml Fresh Grapefruit Juice</li>
                     <li>10ml Rosemary Syrup</li>
                     <li>Top with Tonic Water</li>
@@ -289,12 +302,12 @@
             <!-- Recipe 2 -->
             <div class="mixology-item w-[85vw] md:w-auto md:min-w-[400px] snap-center glass-panel p-8 rounded-2xl flex-shrink-0">
                 <div class="h-48 w-full bg-gradient-to-b from-[var(--brand-rose)]/20 to-transparent rounded-2xl mb-6 overflow-hidden flex items-center justify-center">
-                    <img src="Satiwa/Baby/670711860_18043561049772907_3815601014844355306_n..jpg" alt="Strawberry Blush" class="h-full w-full object-cover mix-blend-multiply opacity-80">
+                    <img src="assets/mixology/strawberry-blush.png" alt="Strawberry Blush" class="h-full w-full object-cover mix-blend-multiply opacity-80">
                 </div>
                 <p class="text-[10px] text-[var(--brand-rose)] uppercase tracking-widest mb-2">Baby Pink Gin</p>
                 <h4 class="text-3xl serif mb-4">Strawberry Blush</h4>
                 <ul class="text-sm text-[var(--brand-text)]/70 space-y-3 border-l border-[var(--brand-sage)]/30 pl-4">
-                    <li>50ml Satiwa Baby Pink Gin</li>
+                    <li>50ml A Labs Spiritz Baby Pink Gin</li>
                     <li>15ml Fresh Lemon Juice</li>
                     <li>1 Egg White (or aquafaba)</li>
                     <li>Fresh Muddled Strawberries</li>
@@ -304,12 +317,12 @@
             <!-- Recipe 3 -->
             <div class="mixology-item w-[85vw] md:w-auto md:min-w-[400px] snap-center glass-panel p-8 rounded-2xl flex-shrink-0">
                 <div class="h-48 w-full bg-gradient-to-b from-[var(--brand-gold-dark)]/20 to-transparent rounded-2xl mb-6 overflow-hidden flex items-center justify-center">
-                    <img src="Satiwa/Gin/Instagram/1-08.png" alt="Tropical Storm" class="h-full w-full object-cover mix-blend-multiply opacity-80">
+                    <img src="assets/mixology/tropical-storm.png" alt="Tropical Storm" class="h-full w-full object-cover mix-blend-multiply opacity-80">
                 </div>
                 <p class="text-[10px] text-[var(--brand-gold-dark)] uppercase tracking-widest mb-2">Hemp Craft Rum</p>
                 <h4 class="text-3xl serif mb-4">Tropical Storm</h4>
                 <ul class="text-sm text-[var(--brand-text)]/70 space-y-3 border-l border-[var(--brand-sage)]/30 pl-4">
-                    <li>60ml Satiwa Hemp Craft Rum</li>
+                    <li>60ml A Labs Spiritz Hemp Craft Rum</li>
                     <li>15ml Fresh Lime Juice</li>
                     <li>2 Dashes Angostura Bitters</li>
                     <li>Top with Spicy Ginger Beer</li>
@@ -319,12 +332,12 @@
             <!-- Recipe 4 -->
             <div class="mixology-item w-[85vw] md:w-auto md:min-w-[400px] snap-center glass-panel p-8 rounded-2xl flex-shrink-0">
                 <div class="h-48 w-full bg-gradient-to-b from-[var(--brand-green)]/20 to-transparent rounded-2xl mb-6 overflow-hidden flex items-center justify-center">
-                    <img src="Satiwa/Rum/Instagram/610811174_18335009059210212_7642357163351596114_n..jpg" alt="Hemp Mojito" class="h-full w-full object-cover mix-blend-multiply opacity-80">
+                    <img src="assets/mixology/hemp-mojito.png" alt="Hemp Mojito" class="h-full w-full object-cover mix-blend-multiply opacity-80">
                 </div>
                 <p class="text-[10px] text-[var(--brand-gold-dark)] uppercase tracking-widest mb-2">Hemp Craft Rum</p>
                 <h4 class="text-3xl serif mb-4">Hemp Mojito</h4>
                 <ul class="text-sm text-[var(--brand-text)]/70 space-y-3 border-l border-[var(--brand-sage)]/30 pl-4">
-                    <li>50ml Satiwa Hemp Craft Rum</li>
+                    <li>50ml A Labs Spiritz Hemp Craft Rum</li>
                     <li>Fresh Mint Leaves</li>
                     <li>20ml Lime Juice</li>
                     <li>Top with Soda Water</li>
@@ -334,12 +347,12 @@
             <!-- Recipe 5 -->
             <div class="mixology-item w-[85vw] md:w-auto md:min-w-[400px] snap-center glass-panel p-8 rounded-2xl flex-shrink-0">
                 <div class="h-48 w-full bg-gradient-to-b from-[var(--brand-rose)]/20 to-transparent rounded-2xl mb-6 overflow-hidden flex items-center justify-center">
-                    <img src="Satiwa/Baby/670861657_18043564502772907_4828334460202877568_n..jpg" alt="Rose Petal Martini" class="h-full w-full object-cover mix-blend-multiply opacity-80">
+                    <img src="assets/mixology/rose-petal-martini.png" alt="Rose Petal Martini" class="h-full w-full object-cover mix-blend-multiply opacity-80">
                 </div>
                 <p class="text-[10px] text-[var(--brand-rose)] uppercase tracking-widest mb-2">Baby Pink Gin</p>
                 <h4 class="text-3xl serif mb-4">Rose Petal Martini</h4>
                 <ul class="text-sm text-[var(--brand-text)]/70 space-y-3 border-l border-[var(--brand-sage)]/30 pl-4">
-                    <li>60ml Satiwa Baby Pink Gin</li>
+                    <li>60ml A Labs Spiritz Baby Pink Gin</li>
                     <li>10ml Dry Vermouth</li>
                     <li>5ml Rose Syrup</li>
                     <li>Garnish with Edible Rose</li>
@@ -349,12 +362,12 @@
             <!-- Recipe 6 -->
             <div class="mixology-item w-[85vw] md:w-auto md:min-w-[400px] snap-center glass-panel p-8 rounded-2xl flex-shrink-0">
                 <div class="h-48 w-full bg-gradient-to-b from-[var(--brand-gold)]/20 to-transparent rounded-2xl mb-6 overflow-hidden flex items-center justify-center">
-                    <img src="Satiwa/Gin/Instagram/1-05.png" alt="The Classic High" class="h-full w-full object-cover mix-blend-multiply opacity-80">
+                    <img src="assets/mixology/classic-high.png" alt="The Classic High" class="h-full w-full object-cover mix-blend-multiply opacity-80">
                 </div>
                 <p class="text-[10px] text-[var(--brand-gold-dark)] uppercase tracking-widest mb-2">Hemp Craft Gin</p>
                 <h4 class="text-3xl serif mb-4">The Classic High</h4>
                 <ul class="text-sm text-[var(--brand-text)]/70 space-y-3 border-l border-[var(--brand-sage)]/30 pl-4">
-                    <li>50ml Satiwa Hemp Craft Gin</li>
+                    <li>50ml A Labs Spiritz Hemp Craft Gin</li>
                     <li>150ml Indian Tonic</li>
                     <li>Cucumber Ribbon</li>
                     <li>Juniper Berries</li>
@@ -385,7 +398,7 @@
                 <span class="section-label">- AVAILABILITY</span>
                 <h3 class="text-4xl serif mb-6">Where to find us</h3>
                 <p class="text-[var(--brand-text)]/70 font-light max-w-2xl mx-auto leading-relaxed">
-                    Satiwa is currently available at select premium liquor stores, bars, and experience centers across India. Explore the map below to find the nearest stockist.
+                    A Labs Spiritz is currently available at select premium liquor stores, bars, and experience centers across India. Explore the map below to find the nearest stockist.
                 </p>
                 <p class="text-xs text-[var(--brand-text)]/50 mt-3">Demo data: the locations on this map are illustrative placeholders, not real stockists.</p>
             </div>
@@ -400,7 +413,7 @@
     <!-- Footer -->
     <footer class="bg-[#050505] pt-20 pb-12 border-t border-[var(--brand-sage)]/30 text-center">
         <div class="max-w-7xl mx-auto px-6">
-            <h2 class="text-4xl serif mb-2 text-[var(--brand-text)] tracking-widest">SATIWA</h2>
+            <h2 class="text-4xl serif mb-2 text-[var(--brand-text)] tracking-widest">A LABS SPIRITZ</h2>
             <p class="text-[var(--brand-gold-dark)] mb-10 text-sm font-serif italic">The Happy High Gin</p>
             
             <div class="flex justify-center gap-8 mb-12">
@@ -413,7 +426,7 @@
                 <p class="text-xs text-[var(--brand-text)]/50 uppercase tracking-[0.2em] mb-4 font-bold">
                     DRINK RESPONSIBLY. NOT FOR SALE TO PERSONS UNDER 18.
                 </p>
-                <p class="text-xs text-[var(--brand-text)]/60 max-w-3xl mx-auto leading-relaxed">Unofficial concept redesign by Siddhant Baliga. Not affiliated with or endorsed by Satiwa. All trademarks and imagery belong to their respective owners.</p>
+                <p class="text-xs text-[var(--brand-text)]/60 max-w-3xl mx-auto leading-relaxed">A Labs Spiritz — crafted in small batches. Please enjoy responsibly.</p>
             </div>
         </div>
     </footer>
@@ -421,7 +434,7 @@
     <script>
         // Age Gate Logic
         document.addEventListener("DOMContentLoaded", () => {
-            if(localStorage.getItem('satiwa_age_verified') === 'true') {
+            if(localStorage.getItem('a_labs_spiritz_age_verified') === 'true') {
                 const ageGate = document.getElementById('age-gate');
                 if(ageGate) ageGate.style.display = 'none';
                 document.body.classList.remove('overflow-hidden');
@@ -429,7 +442,7 @@
         });
 
         function enterSite() {
-            localStorage.setItem('satiwa_age_verified', 'true');
+            localStorage.setItem('a_labs_spiritz_age_verified', 'true');
             const ageGate = document.getElementById('age-gate');
             if(ageGate) ageGate.style.opacity = '0';
             setTimeout(() => {
@@ -668,7 +681,7 @@
                     { lat: 15.6026, lng: 73.7371, name: "Vagator Cliff Lounge", type: "Bar", icon: iconBar },
                     { lat: 15.5401, lng: 73.7536, name: "Baga Mixology Hub", type: "Experience Center", icon: iconExp },
                     { lat: 15.4989, lng: 73.8278, name: "Panjim Central Liquors", type: "Store", icon: iconStore },
-                    { lat: 15.2993, lng: 73.9740, name: "Margao Satiwa Flagship", type: "Experience Center", icon: iconExp },
+                    { lat: 15.2993, lng: 73.9740, name: "Margao A Labs Spiritz Flagship", type: "Experience Center", icon: iconExp },
                     { lat: 15.0080, lng: 74.0229, name: "Palolem Beach Bar", type: "Bar", icon: iconBar },
                     { lat: 15.5230, lng: 73.7668, name: "Calangute Wine Shop", type: "Store", icon: iconStore },
                     { lat: 15.6300, lng: 73.7126, name: "Morjim Sunset Bar", type: "Bar", icon: iconBar },
@@ -734,8 +747,3 @@
     </script>
 </body>
 </html>
-
-
-
-
-

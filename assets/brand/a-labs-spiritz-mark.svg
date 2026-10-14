@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="A Labs Spiritz">
+  <g transform="translate(0 0) scale(1.0)">
+    <!-- liquid -->
+    <path d="M27.5 66 H72.5 L83 86 Q85 91 79 91 H21 Q15 91 17 86 Z" fill="#B8913A"/>
+    <!-- flask body / letter A -->
+    <path d="M43 14 V36 L17 86 Q15 91 21 91 H79 Q85 91 83 86 L57 36 V14" fill="none" stroke="#1E4B1E" stroke-width="6" stroke-linejoin="round" stroke-linecap="round"/>
+    <!-- crossbar -->
+    <path d="M27.5 66 H72.5" stroke="#1E4B1E" stroke-width="6" stroke-linecap="round"/>
+    <!-- rim -->
+    <path d="M38 11 H62" stroke="#1E4B1E" stroke-width="6" stroke-linecap="round"/>
+    <!-- bubbles -->
+    <circle cx="47" cy="56" r="3" fill="#B8913A"/>
+    <circle cx="54.5" cy="48" r="2.2" fill="#B8913A"/>
+    <!-- botanical leaf from the neck -->
+    <path d="M60 30 C64 29 66 26 66 21" fill="none" stroke="#B8913A" stroke-width="2.4" stroke-linecap="round"/>
+    <path d="M66 22 C74 21 81 14 82 4 C72 5 66 12 66 22 Z" fill="#B8913A"/>
+    <path d="M67 20.5 C71 16 75 11 79 7" fill="none" stroke="#fff" stroke-opacity=".6" stroke-width="1.1" stroke-linecap="round"/>
+  </g>
+</svg>
